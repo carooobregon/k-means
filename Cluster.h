@@ -6,11 +6,11 @@ class Cluster{
     public:
         Cluster(int, double, double);
         int getCID();
-        vector<int> getMyItems();
+        vector<Item> getMyItems();
         double getcDim1();
         double getcDim2();
         double calculateDistance(Item);
-        void addItem(int);
+        void addItem(Item);
         void printItems();
         bool isEmpty();
         void resetCluster();
@@ -19,8 +19,9 @@ class Cluster{
         int cID;
         double cDim1;
         double cDim2;
-        vector<int> myItems;
+        vector<Item> myItems;
         void recalculateDimensions();
+        bool hasStarted;
 
 };
 
@@ -28,14 +29,14 @@ Cluster::Cluster(int pCid, double pCDim1, double pCDim2){
     cID = pCid;
     cDim1 = pCDim1;
     cDim2 = pCDim2;
-    // myItems.push_back(0);
+    hasStarted = 0;
 }
 
 int Cluster::getCID(){
     return cID;
 }
 
-vector<int> Cluster::getMyItems(){
+vector<Item> Cluster::getMyItems(){
     return myItems;
 }
 
@@ -51,14 +52,14 @@ double Cluster::calculateDistance(Item curr){
     return sqrt(pow(curr.getDim1() - cDim1, 2)+pow(curr.getDim2() - cDim2,2));
 }
 
-void Cluster::addItem(int curr){
+void Cluster::addItem(Item curr){
     this->myItems.push_back(curr);
 }
 
 void Cluster::printItems(){
     cout << "CLUSTER " << cID << endl; 
     for(int i = 0 ; i < myItems.size(); i++){
-        cout << this->myItems[i] << " "; 
+        cout << this->myItems[i].getID() << " "; 
     }
     cout << endl;
 }
@@ -68,8 +69,8 @@ bool Cluster::isEmpty(){
 }
 
 void Cluster::resetCluster(){
-    this->myItems.clear();
     recalculateDimensions();
+    this->myItems.clear();
 }
 
 void Cluster::recalculateDimensions(){
@@ -80,10 +81,13 @@ void Cluster::recalculateDimensions(){
         d1 += myItems[i].getDim1();
         d2 += myItems[i].getDim2();
     }
-
+    
     d1 /= myItems.size();
     d2 /= myItems.size();
-
-    this->cDim1 = d1;
-    this->cDim2 = d2;
+    // cout << "AVG " << d1 << " " << d2 << endl;
+    if(hasStarted){
+        this->cDim1 = d1;
+        this->cDim2 = d2;
+    } else
+        hasStarted = true;
 }

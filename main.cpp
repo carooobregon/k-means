@@ -20,7 +20,7 @@ void assignClusters(vector<Item> items, vector<Cluster> &clusters){
             }
         }
         minDistance = 10000;
-        clusters[minID].addItem(items[i].getID());
+        clusters[minID].addItem(items[i]);
     }
 }
 
@@ -71,7 +71,7 @@ vector<Item> readDataSet(istream& dataset){
     return allItems;
 }
 
-void printAllClusters(vector<Cluster> k){
+void printAllClusters(vector<Cluster> &k){
     for(int i = 0; i < k.size(); i++){
         k[i].printItems();
     }
@@ -92,17 +92,16 @@ bool areClustersEmpty(vector<Cluster> myClusters){
 }
 
 void iterations(vector<Item> myItems, vector<Cluster> &myClusters){
-    int k = 3;
+    int k = 4;
     int i = 0;
     do {
+        cout << "CURRENT CLUSTERS STAND AS: " << myClusters[2].getcDim1() << endl;
         resetAllClusters(myClusters);
         assignClusters(myItems, myClusters);
         cout << "IN K = " << i << endl;
         printAllClusters(myClusters);
         i++;
     }while(i < k && !areClustersEmpty(myClusters));
-    cout << "FINAL " << endl;
-    printAllClusters(myClusters);
 }
 
 int main(){
