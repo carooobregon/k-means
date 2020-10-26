@@ -23,8 +23,15 @@ void assignClusters(vector<Item> items, vector<Cluster> &clusters){
         clusters[minID].addItem(items[i].getID());
     }
 }
-vector<int> randomizeNumbers(){
-    int sz = (int)items.size();
+
+vector<int> randomizeNumbers(int sz){
+    int k1,k2,k3;
+
+    vector<int> nums;
+    nums.push_back(0);
+    nums.push_back(2);
+    nums.push_back(4);
+
     k1 = rand() % sz;
     do{
         k2 = rand() % sz;
@@ -32,18 +39,16 @@ vector<int> randomizeNumbers(){
     do{
         k3 = rand()  % sz;
     } while(k3 == k1 || k3 == k2);
-    return {k1,k2,k3};
+    return nums;
 }
-vector<Cluster> initClusters(vector<Item> items){
-    int k1, k2, k3;
-    k1 = 0;
-    k2 = 2;
-    k3 = 4;
-    vector<Cluster> klusters;
-    klusters.push_back(Cluster(k1, items[k1].getDim1(), items[k1].getDim2()));
-    klusters.push_back(Cluster(k2, items[k2].getDim1(), items[k2].getDim2()));
-    klusters.push_back(Cluster(k3, items[k3].getDim1(), items[k3].getDim2()));
 
+vector<Cluster> initClusters(vector<Item> items){
+    vector<int> nums = randomizeNumbers((int)items.size());
+    vector<Cluster> klusters;
+    for(int i = 0 ; i < nums.size(); i++){
+        int currN = nums[i];
+        klusters.push_back(Cluster(currN, items[currN].getDim1(), items[currN].getDim2()));
+    }
     return klusters;
 }
 
@@ -72,6 +77,34 @@ void printAllClusters(vector<Cluster> k){
     }
 }
 
+void resetAllClusters(vector<Cluster> &k){
+    for(int i = 0; i < k.size(); i++){
+        k[i].resetCluster();
+    }
+}
+
+bool areClustersEmpty(vector<Cluster> myClusters){
+    for(int i =0 ; i < myClusters.size(); i++){
+        if(myClusters[i].isEmpty())
+            return true;
+    }
+    return false;
+}
+
+void iterations(vector<Item> myItems, vector<Cluster> &myClusters){
+    int k = 3;
+    int i = 0;
+    do {
+        resetAllClusters(myClusters);
+        assignClusters(myItems, myClusters);
+        cout << "IN K = " << i << endl;
+        printAllClusters(myClusters);
+        i++;
+    }while(i < k && !areClustersEmpty(myClusters));
+    cout << "FINAL " << endl;
+    printAllClusters(myClusters);
+}
+
 int main(){
     ifstream myData;
     string filename;
@@ -80,6 +113,7 @@ int main(){
     myData.open(filename);
     vector<Item> myItems = readDataSet(myData);
     vector<Cluster> myClusters = initClusters(myItems);
-    assignClusters(myItems, myClusters);
-    printAllClusters(myClusters);
+    // assignClusters(myItems, myClusters);
+    iterations(myItems, myClusters);
+    // printAllClusters(myClusters);
 }

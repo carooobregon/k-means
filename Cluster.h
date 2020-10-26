@@ -12,12 +12,15 @@ class Cluster{
         double calculateDistance(Item);
         void addItem(int);
         void printItems();
+        bool isEmpty();
+        void resetCluster();
 
     private:
         int cID;
         double cDim1;
         double cDim2;
         vector<int> myItems;
+        void recalculateDimensions();
 
 };
 
@@ -58,4 +61,29 @@ void Cluster::printItems(){
         cout << this->myItems[i] << " "; 
     }
     cout << endl;
+}
+
+bool Cluster::isEmpty(){
+    return myItems.empty();
+}
+
+void Cluster::resetCluster(){
+    this->myItems.clear();
+    recalculateDimensions();
+}
+
+void Cluster::recalculateDimensions(){
+    double d1 = 0; 
+    double d2 = 0;
+
+    for(int i = 0; i < myItems.size(); i++){
+        d1 += myItems[i].getDim1();
+        d2 += myItems[i].getDim2();
+    }
+
+    d1 /= myItems.size();
+    d2 /= myItems.size();
+
+    this->cDim1 = d1;
+    this->cDim2 = d2;
 }
