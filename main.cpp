@@ -91,15 +91,13 @@ bool areClustersEmpty(vector<Cluster> myClusters){
     return false;
 }
 
-void iterations(vector<Item> myItems, vector<Cluster> &myClusters){
+void iterateKs(vector<Item> myItems, vector<Cluster> &myClusters){
     int k = 4;
     int i = 0;
     do {
-        cout << "CURRENT CLUSTERS STAND AS: " << myClusters[2].getcDim1() << endl;
         resetAllClusters(myClusters);
         assignClusters(myItems, myClusters);
-        cout << "IN K = " << i << endl;
-        printAllClusters(myClusters);
+        // cout << "IN K = " << i << endl;
         i++;
     }while(i < k && !areClustersEmpty(myClusters));
 }
@@ -113,6 +111,6 @@ int main(){
     vector<Item> myItems = readDataSet(myData);
     vector<Cluster> myClusters = initClusters(myItems);
     // assignClusters(myItems, myClusters);
-    iterations(myItems, myClusters);
-    // printAllClusters(myClusters);
+    iterateKs(myItems, myClusters);
+    printAllClusters(myClusters);
 }

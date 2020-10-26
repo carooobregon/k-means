@@ -15,7 +15,7 @@ class Item{
 };
 
 Item::Item(int pId, double pDim1, double pDim2){
-    id = pId;
+    id = pId+1;
     dim1 = pDim1;
     dim2 = pDim2;
 }
