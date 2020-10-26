@@ -23,21 +23,23 @@ void assignClusters(vector<Item> items, vector<Cluster> &clusters){
         clusters[minID].addItem(items[i].getID());
     }
 }
-
+vector<int> randomizeNumbers(){
+    int sz = (int)items.size();
+    k1 = rand() % sz;
+    do{
+        k2 = rand() % sz;
+    } while(k2 == k1);
+    do{
+        k3 = rand()  % sz;
+    } while(k3 == k1 || k3 == k2);
+    return {k1,k2,k3};
+}
 vector<Cluster> initClusters(vector<Item> items){
     int k1, k2, k3;
     k1 = 0;
     k2 = 2;
     k3 = 4;
     vector<Cluster> klusters;
-    // int sz = (int)items.size();
-    // k1 = rand() % sz;
-    // do{
-    //     k2 = rand() % sz;
-    // } while(k2 == k1);
-    // do{
-    //     k3 = rand()  % sz;
-    // } while(k3 == k1 || k3 == k2);
     klusters.push_back(Cluster(k1, items[k1].getDim1(), items[k1].getDim2()));
     klusters.push_back(Cluster(k2, items[k2].getDim1(), items[k2].getDim2()));
     klusters.push_back(Cluster(k3, items[k3].getDim1(), items[k3].getDim2()));
