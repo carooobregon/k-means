@@ -8,20 +8,40 @@
 
 using namespace std;
 
-vector<int> assignClusters(vector<Item> items){
+void assignClusters(vector<Item> items, vector<Cluster> &clusters){
+    double minDistance = 100000;
+    int minID = 1000 ;
+    for(int i = 0 ; i < items.size(); i++){
+        for(int j  = 0 ; j < clusters.size(); j++){
+            double k = clusters[j].calculateDistance(items[i]);
+            if(k < minDistance){
+                minDistance = min(k, minDistance);
+                minID = j;
+            }
+        }
+        minDistance = 10000;
+        clusters[minID].addItem(items[i].getID());
+    }
+}
+
+vector<Cluster> initClusters(vector<Item> items){
     int k1, k2, k3;
-    vector<int> klusters;
-    int sz = (int)items.size();
-    k1 = rand() % sz;
-    do{
-        k2 = rand() % sz;
-    } while(k2 == k1);
-    do{
-        k3 = rand()  % sz;
-    } while(k3 == k1 || k3 == k2);
-    klusters.push_back(k1);
-    klusters.push_back(k2);
-    klusters.push_back(k3);
+    k1 = 0;
+    k2 = 2;
+    k3 = 4;
+    vector<Cluster> klusters;
+    // int sz = (int)items.size();
+    // k1 = rand() % sz;
+    // do{
+    //     k2 = rand() % sz;
+    // } while(k2 == k1);
+    // do{
+    //     k3 = rand()  % sz;
+    // } while(k3 == k1 || k3 == k2);
+    klusters.push_back(Cluster(k1, items[k1].getDim1(), items[k1].getDim2()));
+    klusters.push_back(Cluster(k2, items[k2].getDim1(), items[k2].getDim2()));
+    klusters.push_back(Cluster(k3, items[k3].getDim1(), items[k3].getDim2()));
+
     return klusters;
 }
 
@@ -44,6 +64,12 @@ vector<Item> readDataSet(istream& dataset){
     return allItems;
 }
 
+void printAllClusters(vector<Cluster> k){
+    for(int i = 0; i < k.size(); i++){
+        k[i].printItems();
+    }
+}
+
 int main(){
     ifstream myData;
     string filename;
@@ -51,6 +77,7 @@ int main(){
     cin >> filename;
     myData.open(filename);
     vector<Item> myItems = readDataSet(myData);
-    vector<int> myClusters = assignClusters(myItems);
-    cout << myClusters[0] << " " << myClusters[1] << " " << myClusters[2] << endl; 
+    vector<Cluster> myClusters = initClusters(myItems);
+    assignClusters(myItems, myClusters);
+    printAllClusters(myClusters);
 }
