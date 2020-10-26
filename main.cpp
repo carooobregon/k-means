@@ -39,6 +39,9 @@ vector<int> randomizeNumbers(int sz){
     do{
         k3 = rand()  % sz;
     } while(k3 == k1 || k3 == k2);
+    // nums.push_back(k1);
+    // nums.push_back(k2);
+    // nums.push_back(k3);
     return nums;
 }
 
