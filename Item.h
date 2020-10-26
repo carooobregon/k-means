@@ -1,6 +1,8 @@
 
 using namespace std;
 
+// Determines a generic item that has two dimensions
+
 class Item{
     public: 
         Item(int,double,double);

@@ -8,22 +8,7 @@
 
 using namespace std;
 
-void assignClusters(vector<Item> items, vector<Cluster> &clusters){
-    double minDistance = 100000;
-    int minID = 1000 ;
-    for(int i = 0 ; i < items.size(); i++){
-        for(int j  = 0 ; j < clusters.size(); j++){
-            double k = clusters[j].calculateDistance(items[i]);
-            if(k < minDistance){
-                minDistance = min(k, minDistance);
-                minID = j;
-            }
-        }
-        minDistance = 10000;
-        clusters[minID].addItem(items[i]);
-    }
-}
-
+// Determines numbers to use to initialize clusters
 vector<int> randomizeNumbers(int sz){
     int k1,k2,k3;
 
@@ -45,6 +30,59 @@ vector<int> randomizeNumbers(int sz){
     return nums;
 }
 
+// Prints all items in every cluster
+void printAllClusters(vector<Cluster> &k){
+    for(int i = 0; i < k.size(); i++){
+        k[i].printItems();
+    }
+}
+
+// Resets clusters by using the resetCluser() function which calculates average and clears vectors of assigned items
+void resetAllClusters(vector<Cluster> &k){
+    for(int i = 0; i < k.size(); i++){
+        k[i].resetCluster();
+    }
+}
+
+// Determines if any of the clusters are empty
+bool areClustersEmpty(vector<Cluster> myClusters){
+    for(int i =0 ; i < myClusters.size(); i++){
+        if(myClusters[i].isEmpty())
+            return true;
+    }
+    return false;
+}
+
+// Assings clusters by calculating euclidean distance between point and clusters.
+// Finds minimum distance and adds it to cluster
+void assignClusters(vector<Item> items, vector<Cluster> &clusters){
+    double minDistance = 100000;
+    int minID = 1000 ;
+    for(int i = 0 ; i < items.size(); i++){
+        for(int j  = 0 ; j < clusters.size(); j++){
+            double k = clusters[j].calculateDistance(items[i]);
+            if(k < minDistance){
+                minDistance = min(k, minDistance);
+                minID = j;
+            }
+        }
+        minDistance = 10000;
+        clusters[minID].addItem(items[i]);
+    }
+}
+
+// Iterates as many K's as requested or until a cluster becomes empty
+void iterateKs(vector<Item> myItems, vector<Cluster> &myClusters){
+    int k = 4;
+    int i = 0;
+    do {
+        resetAllClusters(myClusters);
+        assignClusters(myItems, myClusters);
+        i++;
+    }while(i < k && !areClustersEmpty(myClusters));
+}
+
+// Initializes clusters
 vector<Cluster> initClusters(vector<Item> items){
     vector<int> nums = randomizeNumbers((int)items.size());
     vector<Cluster> klusters;
@@ -55,6 +93,7 @@ vector<Cluster> initClusters(vector<Item> items){
     return klusters;
 }
 
+// Parses input strings
 Item parseString(string currLine, int n){
     size_t found = currLine.find(',');
     double dim1 = stod(currLine.substr(0, found));
@@ -72,37 +111,6 @@ vector<Item> readDataSet(istream& dataset){
         n++;
     }
     return allItems;
-}
-
-void printAllClusters(vector<Cluster> &k){
-    for(int i = 0; i < k.size(); i++){
-        k[i].printItems();
-    }
-}
-
-void resetAllClusters(vector<Cluster> &k){
-    for(int i = 0; i < k.size(); i++){
-        k[i].resetCluster();
-    }
-}
-
-bool areClustersEmpty(vector<Cluster> myClusters){
-    for(int i =0 ; i < myClusters.size(); i++){
-        if(myClusters[i].isEmpty())
-            return true;
-    }
-    return false;
-}
-
-void iterateKs(vector<Item> myItems, vector<Cluster> &myClusters){
-    int k = 4;
-    int i = 0;
-    do {
-        resetAllClusters(myClusters);
-        assignClusters(myItems, myClusters);
-        // cout << "IN K = " << i << endl;
-        i++;
-    }while(i < k && !areClustersEmpty(myClusters));
 }
 
 int main(){
